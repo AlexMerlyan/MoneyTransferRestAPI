@@ -12,6 +12,8 @@ import java.net.InetSocketAddress;
 
 public class Server {
 
+    private static final String TRANSFER_PATH = "/transfer";
+
     public static void main(String[] args) throws IOException {
         runServer();
     }
@@ -21,15 +23,12 @@ public class Server {
         MoneyTransferService service = new MoneyTransferServiceImpl(accountDao);
         MoneyTransferHandler handler = new MoneyTransferHandler(service);
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-        server.createContext("/transfer", handler);
-        server.setExecutor(null); // creates a default executor
-        server.start();
+        runServer(handler);
     }
 
     public static void runServer(HttpHandler handler) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-        server.createContext("/transfer", handler);
+        server.createContext(TRANSFER_PATH, handler);
         server.setExecutor(null); // creates a default executor
         server.start();
     }
