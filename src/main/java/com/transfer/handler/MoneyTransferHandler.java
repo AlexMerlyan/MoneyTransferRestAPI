@@ -51,7 +51,8 @@ public class MoneyTransferHandler implements HttpHandler {
             }
             dto = gson.fromJson(sb.toString(), MoneyTransferDTO.class);
         } catch (JsonSyntaxException e) {
-            writeResponse(exchange, gson, new ResponseDTO(WRONG_JSON, false));
+            String message = WRONG_JSON + System.lineSeparator() + e.getMessage();
+            writeResponse(exchange, gson, new ResponseDTO(message, false));
             return;
         }
 

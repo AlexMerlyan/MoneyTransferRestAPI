@@ -11,6 +11,7 @@ import com.transfer.service.MoneyTransferServiceImpl;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 
 public class Server {
 
@@ -32,6 +33,7 @@ public class Server {
     public static HttpServer createServer(HttpHandler handler) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
         server.createContext(TRANSFER_PATH, handler);
+        server.setExecutor(Executors.newFixedThreadPool(10));
         return server;
     }
 
