@@ -11,9 +11,10 @@ import lombok.Data;
 @AllArgsConstructor
 public class MoneyTransferServiceImpl implements MoneyTransferService {
 
+    public static final String SUCCESS_TRANSFER = "Transfer was finished successfully";
+
     private static final String ACCOUNTS_NOT_EXISTS = "Accounts with ids %s does not exist";
     private static final String NOT_ENOUGH_MONEY = "Not enough money on account with id %d";
-    private static final String SUCCESS_TRANSFER = "Transfer was finished successfully";
 
     private AccountDao accountDao;
 
@@ -33,7 +34,7 @@ public class MoneyTransferServiceImpl implements MoneyTransferService {
         return createResponse(SUCCESS_TRANSFER, true);
     }
 
-    private void makeTransfer(Account from, Account to, Long dollars, Long cents) {
+    private void makeTransfer(Account from, Account to, Long dollars, Integer cents) {
         from.setDollars(from.getDollars() - dollars);
         from.setCents(from.getCents() - cents);
         to.setDollars(to.getDollars() + dollars);

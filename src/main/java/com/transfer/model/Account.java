@@ -8,5 +8,5 @@ import lombok.Data;
 public class Account {
     private Integer id;
     private long dollars;
-    private long cents;
+    private int cents;
 }

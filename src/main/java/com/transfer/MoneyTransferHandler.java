@@ -19,11 +19,12 @@ import java.util.Scanner;
 @AllArgsConstructor
 public class MoneyTransferHandler implements HttpHandler {
 
+    public static final String CONTENT_TYPE_KEY = "Content-Type";
+    public static final String CONTENT_TYPE_VALUE = "application/json";
+
     private static final String WRONG_JSON = "Malformed json. Please, correct it and try again.";
 
     private static final String POST = "POST";
-    private static final String CONTENT_TYPE_KEY = "Content-Type";
-    private static final String CONTENT_TYPE_VALUE = "application/json";
     private static final int SUCCESS_CODE = 200;
     private static final int FAILURE_CODE = 400;
 

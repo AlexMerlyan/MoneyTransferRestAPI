@@ -15,22 +15,23 @@ public class Server {
     private static final String TRANSFER_PATH = "/transfer";
 
     public static void main(String[] args) throws IOException {
-        runServer();
+        HttpServer server = createServer();
+        server.start();
     }
 
-    public static void runServer() throws IOException {
+    public static HttpServer createServer() throws IOException {
         AccountDao accountDao = new AccountDaoImpl();
         MoneyTransferService service = new MoneyTransferServiceImpl(accountDao);
         MoneyTransferHandler handler = new MoneyTransferHandler(service);
 
-        runServer(handler);
+        return createServer(handler);
     }
 
-    public static void runServer(HttpHandler handler) throws IOException {
+    public static HttpServer createServer(HttpHandler handler) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
         server.createContext(TRANSFER_PATH, handler);
         server.setExecutor(null); // creates a default executor
-        server.start();
+        return server;
     }
 
 }
