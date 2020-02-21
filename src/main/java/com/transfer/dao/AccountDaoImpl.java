@@ -8,7 +8,7 @@ import java.util.Map;
 public class AccountDaoImpl implements AccountDao {
 
     private final Map<Integer, Account> accounts = new HashMap<>();
-    private volatile int idCounter;
+    private int idCounter;
 
     @Override
     public Account getAccountById(Integer id) {
@@ -18,7 +18,7 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public void saveAccount(Account account) {
         if (account.getId() == null) {
-            account.setId(generateId());
+            account.setId(++idCounter);
         }
         accounts.put(account.getId(), account);
     }
@@ -28,7 +28,4 @@ public class AccountDaoImpl implements AccountDao {
         accounts.remove(id);
     }
 
-    private synchronized Integer generateId() {
-        return ++idCounter;
-    }
 }

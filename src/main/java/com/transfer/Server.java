@@ -31,7 +31,6 @@ public class Server {
     public static HttpServer createServer(HttpHandler handler) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
         server.createContext(TRANSFER_PATH, handler);
-        server.setExecutor(null); // creates a default executor
         return server;
     }
 
