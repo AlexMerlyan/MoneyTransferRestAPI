@@ -57,7 +57,6 @@ public class MoneyTransferHandler implements HttpHandler {
 
         ResponseDTO response = transferService.transfer(dto);
         writeResponse(exchange, gson, response);
-        exchange.close();
     }
 
     private void writeResponse(HttpExchange exchange, Gson gson, ResponseDTO response) throws IOException {
