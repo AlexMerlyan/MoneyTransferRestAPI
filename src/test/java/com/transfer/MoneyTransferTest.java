@@ -6,6 +6,7 @@ import com.transfer.dao.AccountDao;
 import com.transfer.dao.AccountDaoImpl;
 import com.transfer.dto.MoneyTransferDTO;
 import com.transfer.dto.ResponseDTO;
+import com.transfer.handler.MoneyTransferHandler;
 import com.transfer.model.Account;
 import com.transfer.service.MoneyTransferServiceImpl;
 import javafx.util.Pair;
@@ -24,8 +25,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 
-import static com.transfer.MoneyTransferHandler.CONTENT_TYPE_KEY;
-import static com.transfer.MoneyTransferHandler.CONTENT_TYPE_VALUE;
 import static com.transfer.service.MoneyTransferServiceImpl.SUCCESS_TRANSFER;
 import static org.junit.Assert.assertEquals;
 
@@ -123,7 +122,7 @@ public class MoneyTransferTest {
     private HttpPost createRequest(String requestData) throws UnsupportedEncodingException {
         HttpPost request = new HttpPost(POST_REQUEST_ADDRESS);
         StringEntity params = new StringEntity(requestData);
-        request.addHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+        request.addHeader(MoneyTransferHandler.CONTENT_TYPE_KEY, MoneyTransferHandler.CONTENT_TYPE_VALUE);
         request.setEntity(params);
         return request;
     }

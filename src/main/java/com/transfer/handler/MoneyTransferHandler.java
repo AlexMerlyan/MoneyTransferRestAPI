@@ -1,4 +1,4 @@
-package com.transfer;
+package com.transfer.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
