@@ -23,11 +23,6 @@ public class AccountDaoImpl implements AccountDao {
         accounts.put(account.getId(), account);
     }
 
-    @Override
-    public void removeAccount(Integer id) {
-        accounts.remove(id);
-    }
-
     private synchronized int generateId() {
         return ++idCounter;
     }

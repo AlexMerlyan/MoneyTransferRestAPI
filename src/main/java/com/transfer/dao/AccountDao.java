@@ -8,6 +8,4 @@ public interface AccountDao {
 
     void saveAccount(Account account);
 
-    void removeAccount(Integer id);
-
 }
