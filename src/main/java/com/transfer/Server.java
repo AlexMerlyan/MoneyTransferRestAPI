@@ -1,5 +1,6 @@
 package com.transfer;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.transfer.dao.AccountDao;
@@ -22,7 +23,7 @@ public class Server {
     public static HttpServer createServer() throws IOException {
         AccountDao accountDao = new AccountDaoImpl();
         MoneyTransferService service = new MoneyTransferServiceImpl(accountDao);
-        MoneyTransferHandler handler = new MoneyTransferHandler(service);
+        MoneyTransferHandler handler = new MoneyTransferHandler(new Gson(), service);
 
         return createServer(handler);
     }

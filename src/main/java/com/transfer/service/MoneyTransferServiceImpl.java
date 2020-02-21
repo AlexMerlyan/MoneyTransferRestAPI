@@ -30,22 +30,19 @@ public class MoneyTransferServiceImpl implements MoneyTransferService {
             return createResponse(String.format(NOT_ENOUGH_MONEY, dto.getFrom()), false);
         }
 
-        makeTransfer(fromAccount, toAccount, dto.getDollars(), dto.getCents());
+        makeTransfer(fromAccount, toAccount, dto.getCents());
         return createResponse(SUCCESS_TRANSFER, true);
     }
 
-    private void makeTransfer(Account from, Account to, Long dollars, Integer cents) {
-        from.setDollars(from.getDollars() - dollars);
+    private void makeTransfer(Account from, Account to, Long cents) {
         from.setCents(from.getCents() - cents);
-        to.setDollars(to.getDollars() + dollars);
         to.setCents(to.getCents() + cents);
         accountDao.saveAccount(from);
         accountDao.saveAccount(to);
     }
 
     private boolean isNotEnoughMoney(Account account, MoneyTransferDTO dto) {
-        return account.getDollars() < dto.getDollars()
-                || (account.getDollars() == dto.getDollars() && account.getCents() < dto.getCents());
+        return account.getCents() < dto.getCents();
     }
 
     private String generateMessage(MoneyTransferDTO dto, Account fromAccount, Account toAccount) {

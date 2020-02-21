@@ -23,24 +23,27 @@ public class MoneyTransferHandler implements HttpHandler {
     public static final String CONTENT_TYPE_VALUE = "application/json";
 
     private static final String WRONG_JSON = "Malformed json. Please, correct it and try again.";
+    private static final String METHOD_IS_NOT_SUPPORTED = "Http method is not supported. Please, try to use POST.";
 
     private static final String POST = "POST";
     private static final int SUCCESS_CODE = 200;
     private static final int FAILURE_CODE = 400;
 
+    private Gson gson;
     private MoneyTransferService transferService;
 
     public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
         if (Objects.equals(method, POST)) {
             transferMoney(exchange);
+        } else {
+            writeResponse(exchange, gson, new ResponseDTO(METHOD_IS_NOT_SUPPORTED, false));
         }
         exchange.close();
     }
 
     private void transferMoney(HttpExchange exchange) throws IOException {
         MoneyTransferDTO dto;
-        Gson gson = new Gson();
         try (Scanner scanner = new Scanner(exchange.getRequestBody())) {
             StringBuilder sb = new StringBuilder();
             while (scanner.hasNextLine()) {

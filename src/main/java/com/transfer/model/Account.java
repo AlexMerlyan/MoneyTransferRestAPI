@@ -7,6 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class Account {
     private Integer id;
-    private long dollars;
-    private int cents;
+    private long cents;
 }

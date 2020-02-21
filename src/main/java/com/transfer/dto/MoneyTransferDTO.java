@@ -8,6 +8,5 @@ import lombok.Data;
 public class MoneyTransferDTO {
     private Integer from;
     private Integer to;
-    private Long dollars;
-    private Integer cents;
+    private Long cents;
 }

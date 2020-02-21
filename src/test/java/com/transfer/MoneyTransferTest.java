@@ -15,7 +15,10 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -24,8 +27,9 @@ import java.util.Scanner;
 import static com.transfer.MoneyTransferHandler.CONTENT_TYPE_KEY;
 import static com.transfer.MoneyTransferHandler.CONTENT_TYPE_VALUE;
 import static com.transfer.service.MoneyTransferServiceImpl.SUCCESS_TRANSFER;
+import static org.junit.Assert.assertEquals;
 
-public class MoneyTransferHandlerTest {
+public class MoneyTransferTest {
 
     private static final String POST_REQUEST_ADDRESS = "http://localhost:8000/transfer";
 
@@ -39,7 +43,7 @@ public class MoneyTransferHandlerTest {
     public static void initAndStartServer() throws IOException {
         dao = new AccountDaoImpl();
         service = new MoneyTransferServiceImpl(dao);
-        MoneyTransferHandler handler = new MoneyTransferHandler(service);
+        MoneyTransferHandler handler = new MoneyTransferHandler(new Gson(), service);
         server = Server.createServer(handler);
         server.start();
     }
@@ -58,7 +62,7 @@ public class MoneyTransferHandlerTest {
     @Test
     public void shouldReturnAccountsNotExists() throws IOException {
         //given
-        String requestData = gson.toJson(new MoneyTransferDTO(1, 2, 100L, 99));
+        String requestData = gson.toJson(new MoneyTransferDTO(1, 2, 100_99L));
         HttpPost request = createRequest(requestData);
 
         //when
@@ -68,18 +72,18 @@ public class MoneyTransferHandlerTest {
         Integer expectedCode = 400;
         ResponseDTO expectedContent = new ResponseDTO("Accounts with ids 1, 2 does not exist", false);
 
-        Assert.assertEquals(expectedContent, pair.getKey());
-        Assert.assertEquals(expectedCode, pair.getValue());
+        assertEquals(expectedContent, pair.getKey());
+        assertEquals(expectedCode, pair.getValue());
     }
 
     @Test
     public void shouldReturnNotEnoughMoney() throws IOException {
         //given
-        String requestData = gson.toJson(new MoneyTransferDTO(1, 2, 100L, 99));
+        String requestData = gson.toJson(new MoneyTransferDTO(1, 2, 100_99L));
         HttpPost request = createRequest(requestData);
 
-        dao.saveAccount(new Account(1, 50, 99));
-        dao.saveAccount(new Account(2, 150, 0));
+        dao.saveAccount(new Account(1, 50_99));
+        dao.saveAccount(new Account(2, 150_00));
 
         //when
         Pair<ResponseDTO, Integer> pair = sendRequest(request);
@@ -88,18 +92,18 @@ public class MoneyTransferHandlerTest {
         ResponseDTO expectedContent = new ResponseDTO("Not enough money on account with id 1", false);
         Integer expectedCode = 400;
 
-        Assert.assertEquals(expectedContent, pair.getKey());
-        Assert.assertEquals(expectedCode, pair.getValue());
+        assertEquals(expectedContent, pair.getKey());
+        assertEquals(expectedCode, pair.getValue());
     }
 
     @Test
     public void shouldMakeTransferSuccessfully() throws IOException {
         //given
-        String requestData = gson.toJson(new MoneyTransferDTO(1, 2, 100L, 99));
+        String requestData = gson.toJson(new MoneyTransferDTO(1, 2, 100_99L));
         HttpPost request = createRequest(requestData);
 
-        dao.saveAccount(new Account(1, 200, 99));
-        dao.saveAccount(new Account(2, 150, 0));
+        dao.saveAccount(new Account(1, 200_98));
+        dao.saveAccount(new Account(2, 150_05));
 
         //when
         Pair<ResponseDTO, Integer> pair = sendRequest(request);
@@ -107,15 +111,13 @@ public class MoneyTransferHandlerTest {
         //then
         ResponseDTO expectedContent = new ResponseDTO(SUCCESS_TRANSFER, true);
         Integer expectedCode = 200;
+        Account firstAccount = new Account(1, 99_99);
+        Account secondAccount = new Account(2, 251_04);
 
-        Assert.assertEquals(expectedContent, pair.getKey());
-        Assert.assertEquals(expectedCode, pair.getValue());
-
-        Account firstAccount = new Account(1, 100, 0);
-        Account secondAccount = new Account(2, 250, 99);
-
-        Assert.assertEquals(firstAccount, dao.getAccountById(1));
-        Assert.assertEquals(secondAccount, dao.getAccountById(2));
+        assertEquals(expectedContent, pair.getKey());
+        assertEquals(expectedCode, pair.getValue());
+        assertEquals(firstAccount, dao.getAccountById(1));
+        assertEquals(secondAccount, dao.getAccountById(2));
     }
 
     private HttpPost createRequest(String requestData) throws UnsupportedEncodingException {
