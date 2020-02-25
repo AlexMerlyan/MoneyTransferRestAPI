@@ -9,7 +9,7 @@ I suppose you will use IDE for this, but you also could use terminal command lin
 For running from terminal you need to install maven version 3.6.0 at least.
 
 Then run commands:
-mvn install
+mvn install <br />
 java -jar target/MoneyTransferRestAPI-1.0-SNAPSHOT.jar
 
 Stack of technologies:
